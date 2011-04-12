@@ -1,0 +1,69 @@
+#!/usr/local/bin/make -f
+STAMPDIR=tgz2build/stamps
+
+CONFIGURE_OPTS := --prefix $(ZBS_PREFIX) --enable-thread-safety --without-docdir --without-tcl --without-perl --without-python --without-krb5 --without-pam --without-ldap --without-bonjour --without-openssl --without-readline
+CONFIGURE_CMD = $(SHELL) ./configure
+
+all: binary
+
+binary: clean setup configure build install
+
+ifeq (,$(CC))
+CC:=gcc
+endif
+
+ifneq (,$(findstring sparc64,$(ZBS_ARCH)))
+  ifneq (,$(findstring solaris-8,$(ZBS_DIST)))
+    CONFIGURE_OPTS += --build=sparc64-sun-solaris2.8
+  endif
+  ifneq (,$(findstring solaris-9,$(ZBS_DIST)))
+    CONFIGURE_OPTS += --build=sparc64-sun-solaris2.9
+  endif
+  ifneq (,$(findstring solaris-10,$(ZBS_DIST)))
+    CONFIGURE_OPTS += --build=sparc64-sun-solaris2.10
+  endif
+endif
+
+setup:  $(STAMPDIR)/stamp-setup
+$(STAMPDIR)/stamp-setup:
+	mkdir -p tgz2build/stamps
+	touch $@
+
+configure: $(STAMPDIR)/stamp-configure
+$(STAMPDIR)/stamp-configure: setup
+	if echo $(ZBS_DIST) | grep '^solaris'; then \
+		if echo $(ZBS_ARCH) | grep '^amd64' >/dev/null 2>&1 || echo $(ZBS_ARCH) | grep '^sparc64' >/dev/null 2>&1; then \
+			LDFLAGS_SL="$(LDFLAGS)"; \
+			export LDFLAGS_SL; \
+		fi; \
+    fi; \
+	$(CONFIGURE_CMD) $(CONFIGURE_OPTS)
+	touch $@
+
+build:  $(STAMPDIR)/stamp-build
+$(STAMPDIR)/stamp-build: configure
+	$(MAKE)
+	touch $@
+
+install: $(STAMPDIR)/stamp-install
+$(STAMPDIR)/stamp-install: build
+	rm -rf $(ZBS_STAGE_DIR) || true
+	$(MAKE) install prefix=$(ZBS_STAGE_DIR)/$(ZBS_PREFIX)
+	set -xe; \
+	if echo $(ZBS_DIST) | grep '^aix' >/dev/null 2>&1;then \
+		cd $(ZBS_STAGE_DIR)/$(ZBS_PREFIX)/lib; \
+		for a in *.a; do \
+			/usr/bin/ar x $$a; \
+			soname=`basename $$a .a`.so; \
+			realso=`/usr/bin/ar t $$a | head -1`; \
+			ln -s $$realso $$soname; \
+		done; \
+	fi
+	touch $@
+
+clean:
+	rm -rf tgz2build/stamps || true
+	rm -rf tgz2build/staging || true
+	-$(MAKE) clean
+
+.PHONY: build clean binary-indep binary-arch binary install

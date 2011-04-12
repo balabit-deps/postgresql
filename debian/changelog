@@ -1,0 +1,5 @@
+postgresql (8.4.4-1.syslog-ng40.1) syslogngdeps30; urgency=low
+
+  * Initial packaging of 8.4.4.
+
+ -- Tamas Pal <folti@balabit.com>  Mon, 04 Apr 2011 12:26:04 +0200
