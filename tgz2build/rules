@@ -22,6 +22,7 @@ ifneq (,$(findstring sparc64,$(ZBS_ARCH)))
   ifneq (,$(findstring solaris-10,$(ZBS_DIST)))
     CONFIGURE_OPTS += --build=sparc64-sun-solaris2.10
   endif
+  LDFLAGS += -Wl,-R/opt/syslog-ng/lib
 endif
 
 setup:  $(STAMPDIR)/stamp-setup
