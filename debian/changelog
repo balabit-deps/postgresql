@@ -1,3 +1,9 @@
+postgresql (8.4.4-1.syslog-ng52.1) syslogng52; urgency=low
+
+  * release for syslog-ng-5.2
+
+ -- jviktor <jviktor@devel-57>  Tue, 10 Jun 2014 10:38:24 +0200
+
 postgresql (8.4.4-1.syslog-ng51.1) syslogngdeps51; urgency=low
 
   * release for syslog-ng-5.1
