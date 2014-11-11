@@ -17,3 +17,7 @@ objfiles.txt
 /GNUmakefile
 /config.log
 /config.status
+
+#smake
+b
+smake/*.pyc
