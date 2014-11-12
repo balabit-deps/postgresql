@@ -18,6 +18,7 @@ objfiles.txt
 /config.log
 /config.status
 
-#smake
-b
-smake/*.pyc
+#sbuild
+sbuild/build
+sbuild/*.pyc
+sbuild.py
