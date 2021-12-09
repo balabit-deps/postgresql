@@ -1,0 +1,27 @@
+source="postgresql"
+version=8.4.7-pe-1
+
+check_rpath_skip_list=("${prefix}/*")
+
+build() {
+  cd "${build_dir}"
+  ${src_dir}/configure \
+    --prefix="${prefix}" \
+    --enable-thread-safety \
+    --without-docdir \
+    --without-tcl \
+    --without-perl \
+    --without-python \
+    --without-krb5 \
+    --without-pam \
+    --without-ldap \
+    --without-bonjour \
+    --without-openssl \
+    --without-readline \
+    --without-zlib
+  make
+}
+
+install() {
+  make -C "${build_dir}" DESTDIR="${dest_dir}" install
+}

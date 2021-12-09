@@ -17,3 +17,6 @@ objfiles.txt
 /GNUmakefile
 /config.log
 /config.status
+
+sbuild/*
+!sbuild/config.yml
