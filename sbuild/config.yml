@@ -1,8 +1,0 @@
-name: postgres
-builder:
-  name: BalabitBuilder
-  configure_options: "--enable-thread-safety --without-docdir --without-tcl --without-perl --without-python --without-krb5 --without-pam --without-ldap --without-bonjour --without-openssl --without-readline --without-zlib"
-  flags: "no-make-dist"
-platforms:
-  - aix-6.1/powerpc
-  - linux-glibc2.11/amd64
